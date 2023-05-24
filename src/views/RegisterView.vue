@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
 import { DoPost } from '../utils/http_helper.js'
 import Data from '../utils/data.js'
+
+const router = useRouter()
 
 const first_name = ref("")
 const last_name = ref("")
@@ -35,6 +37,7 @@ async function register() {
         errorMessg.value = error.value.json.message
     }else{
         isSuccess.value = true
+        router.push({name:"login", query:{username:username.value}})
     }
 }
 
@@ -44,16 +47,10 @@ async function register() {
     <main>
         <div class="login">
             <form @submit.prevent>
-                <div class="container">
+                <div class="container m-2">
                     <div class="row">
                         <div class="col-2"></div>
                         <div class="col-8">
-                            <div v-if="isSuccess" class="alert alert-success" role="alert">
-                                <h4 class="alert-heading">Well done!</h4>
-                                <p>Successfully Registered User</p>
-                                <hr>
-                                <p class="mb-0">Please go to <RouterLink to="/login" >Login Page</RouterLink></p>
-                            </div>
                             <div v-if="isError" class="alert alert-danger" role="alert">
                                 <h4 class="alert-heading">An Error occur</h4>
                                 <p>
@@ -102,16 +99,17 @@ async function register() {
                                 <div class="row">
                                     <div class="col">
                                         <label>Password</label>
-                                        <input type="password" class="form-control" v-model="password">
+                                        <input type="password" class="form-control" v-model="password" placeholder="Password">
                                     </div>
                                     <div class="col">
                                         <label>Confirm Password</label>
-                                        <input type="password" class="form-control" v-model="confirm_password">
+                                        <input type="password" class="form-control" v-model="confirm_password" placeholder="Confirmed Password">
                                     </div>
                                 </div>
                                 <div class="text-center">
                                     <button class="btn btn-primary" @click="register">Register</button>
                                 </div>
+                                <div class="text-center"><p>If you already have the account, please login. <RouterLink to="/login">Login</RouterLink></p></div>
                             </div>
                         </div>
                         <div class="col-2"></div>

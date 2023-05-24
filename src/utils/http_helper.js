@@ -1,11 +1,24 @@
 import { ref } from 'vue'
 
-export function DoFetch({ url }){
+export async function DoFetch({ url, headers }){
     const data = ref(null);
     const err = ref(null);
-    fetch(url)
-    .then(async res => data.value = await res.json())
-    .catch(err_res => {err.value = err_res})
+    try{
+        let response = await fetch(url,{
+            headers
+        })
+        console.log("Fetched")
+        let json = await response.json()
+        console.log("Getting Json")
+        if (response.status === 200) {
+            data.value = json
+        }else{
+            err.value = {status: response.status, json}
+        }
+    }catch(e){
+        err.value = e
+    }
+
     return {
         data, err
     }

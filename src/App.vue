@@ -1,5 +1,18 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router';
+import { useLoginUserStore } from './stores/LoginUser';
+
+const router = useRouter()
+
+const loginUserStore = useLoginUserStore();
+
+import { useCartStore } from './stores/Cart';
+const cartStore = useCartStore()
+
+function logout(){
+  loginUserStore.unSetUser()
+  router.push({name:"login"})
+}
 </script>
 
 <template>
@@ -9,8 +22,11 @@ import { RouterLink, RouterView } from 'vue-router'
         <h4>Company Name</h4>
         <ul>
           <li><RouterLink to="/">Home</RouterLink></li>
-          <li><RouterLink to="/login">Login</RouterLink></li>
-          <li><RouterLink to="/register">Register</RouterLink></li>
+          <li v-if="loginUserStore.isLogin"><RouterLink to="/report">Report</RouterLink></li>
+          <li ><RouterLink to="/cart">Cart <span><i class="fa-solid fa-cart-shopping"></i></span></RouterLink></li>
+          <li v-if="loginUserStore.getUser == null"><RouterLink to="/login">Login</RouterLink></li>
+          <li v-if="loginUserStore.getUser == null"><RouterLink to="/register">Register</RouterLink></li>
+          <li v-if="loginUserStore.getUser != null"><a href="#" @click="logout">Logout</a></li>
         </ul>
       </nav>
     </div>
